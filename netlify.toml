@@ -1,0 +1,13 @@
+[build]
+  # This tells Netlify to go into your specific subfolder
+  base = "mobile-app/packages/react-app"
+  
+  # This is the command to build your Next.js app
+  command = "npm run build"
+  
+  # This is where Next.js outputs the build files
+  publish = ".next"
+
+[[plugins]]
+  # This plugin is required for Next.js features (SSR, API routes) to work on Netlify
+  package = "@netlify/plugin-nextjs"
