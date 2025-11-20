@@ -2,13 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   webpack: (config) => {
-    config.resolve.fallback = {
-      fs: false,
+    // Fix for Wagmi/RainbowKit trying to import React Native modules
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'react-native$': 'react-native-web',
+      '@react-native-async-storage/async-storage': false,
     };
+    config.resolve.fallback = { fs: false, net: false, tls: false };
     return config;
-  },
-  images: {
-    domains: ['cdn-production-opera-website.operacdn.com'],
   },
 };
 
