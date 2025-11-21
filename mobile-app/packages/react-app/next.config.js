@@ -1,15 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // --- 1. NETLIFY FIXES (Add these!) ---
+  output: 'export', // Forces static HTML generation (creates 'out' folder)
+  images: {
+    unoptimized: true, // Required for static export
+  },
+
+  // --- 2. EXISTING WEBPACK FIXES (Keep these!) ---
   reactStrictMode: true,
   webpack: (config) => {
-    // 1. Ignore React Native specific modules for web builds
+    // Ignore React Native specific modules for web builds
     config.resolve.alias = {
       ...config.resolve.alias,
       'react-native$': 'react-native-web',
-      '@react-native-async-storage/async-storage': false, // <-- This is the critical fix
+      '@react-native-async-storage/async-storage': false,
     };
     
-    // 2. Fix node modules that don't work in browser
+    // Fix node modules that don't work in browser
     config.resolve.fallback = { 
       fs: false, 
       net: false, 
@@ -19,7 +26,7 @@ const nextConfig = {
       'pino-pretty': false
     };
     
-    // 3. Ignore warnings for these specific modules
+    // Ignore warnings for these specific modules
     config.ignoreWarnings = [
       { module: /node_modules\/@walletconnect/ },
       { module: /node_modules\/wagmi/ }
@@ -27,13 +34,14 @@ const nextConfig = {
 
     return config;
   },
-  // Increase timeout for static generation if needed
+  
+  // Increase timeout for static generation
   staticPageGenerationTimeout: 120,
-  // Disable typescript checking during build (since we are in a hurry)
+  
+  // Hackathon Safety: Ignore errors during build
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Disable eslint during build
   eslint: {
     ignoreDuringBuilds: true,
   }
